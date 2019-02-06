@@ -43,4 +43,21 @@ module.exports = (app) => {
     
     });
 
+
+
+    let routeId = app.route('/users/:id'); // creo las rutas para el CRUD
+
+
+    routeId.get((req, res) => {
+
+        db.findOne({ _id: req.params.id }).exec((err, user) => { // buscar un objeto
+            if (err) {
+                app.utils.error.send(err, req, res);
+            } else {
+                res.status(200).json(user);
+            }
+        });
+
+    });
+
 };
