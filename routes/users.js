@@ -30,6 +30,8 @@ module.exports = (app) => {
     
     route.post((req, res) => {
 
+        if (!app.utils.validator.user(app, req, res)) return false; // validator
+
         // salvar registro json en la base de datos
         db.insert(req.body, (err, user) => { // objeto json mas la funcion
 
@@ -62,6 +64,8 @@ module.exports = (app) => {
 
 
     routeId.put((req, res) => {
+
+        if (!app.utils.validator.user(app, req, res)) return false; // validator
 
         db.update({ _id: req.params.id }, req.body, err => { // buscar un objeto
             if (err) {
