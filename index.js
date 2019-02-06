@@ -1,13 +1,16 @@
 const express = require('express');
-let routesIndex = require('./routes/index.js');
-let routesUsers = require('./routes/users.js');
+const consign = require('consign');
+const bodyParser = require('body-parser');
 
 
 let app = express();
 
 
-app.use(routesIndex);
-app.use(routesUsers);
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json()); // todo lo que recibe via post lo convierte en json
+
+
+consign().include('routes').into(app); // consign incluye todas las rutas y lo coloca en el app
 
 
 app.listen(3000, '127.0.0.1', () => {

@@ -1,31 +1,45 @@
-//biblioteca de rutas
-let express = require('express');
-let routes = express.Router();
+let NeDB = require('nedb');
+let db = new NeDB({
 
-routes.get('/', (req, res) => {
-
-    res.statusCode = 200;
-    res.setHeader('Content-type', 'application/json');
-    res.json({
-        users: [{
-            name: 'Denis Alayza',
-            email: 'denis.alayza@gmail.com',
-            id: 1
-        }]
-    });
+    filename: 'users.db',
+    autoload: true
 
 });
 
 
-routes.get('/admin', (req, res) => {
+module.exports = (app) => {
 
-    res.statusCode = 200;
-    res.setHeader('Content-type', 'application/json');
-    res.json({
-        users: []
+    app.get('/users', (req, res) => {
+    
+        res.statusCode = 200;
+        res.setHeader('Content-type', 'application/json');
+        res.json({
+            users: [{
+                name: 'Denis Alayza',
+                email: 'denis.alayza@gmail.com',
+                id: 1
+            }]
+        });
+    
+    });
+    
+    
+    app.post('/users', (req, res) => {
+        
+        // salvar registro json en la base de datos
+        db.insert(req.body, (err, user) => { // objeto json mas la funcion
+
+            if (err) {
+                console.log(`error: ${err}`);
+                res.status(400).json({
+                    error: err
+                });
+            } else {
+                res.status(200).json(user);
+            }
+
+        });
+    
     });
 
-});
-
-
-module.exports = routes;
+};
