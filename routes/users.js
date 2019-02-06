@@ -60,4 +60,19 @@ module.exports = (app) => {
 
     });
 
+
+    routeId.put((req, res) => {
+
+        db.update({ _id: req.params.id }, req.body, err => { // buscar un objeto
+            if (err) {
+                app.utils.error.send(err, req, res);
+            } else {
+                // res.status(200).json(req.body); // Ve datos
+                // res.status(200).json(req.params); // Ve id
+                res.status(200).json(Object.assign(req.params, req.body)); // juntar las dos informaciones
+            }
+        });
+
+    });
+
 };
