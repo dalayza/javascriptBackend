@@ -9,14 +9,13 @@ let db = new NeDB({
 
 module.exports = (app) => {
 
-    app.get('/users', (req, res) => {
+    let route = app.route('/users'); // creo las rutas para el CRUD
+
+    route.get((req, res) => {
 
         db.find({}).sort({name:1}).exec((err, users) => { // listando usuarios de NeDB
             if (err) {
-                console.log(`error: ${err}`);
-                res.status(400).json({
-                    error: err
-                });
+                app.utils.error.send(err, req, res);
             } else {
                 res.statusCode = 200;
                 res.setHeader('Content-type', 'application/json');
@@ -29,16 +28,13 @@ module.exports = (app) => {
     });
     
     
-    app.post('/users', (req, res) => {
+    route.post((req, res) => {
 
         // salvar registro json en la base de datos
         db.insert(req.body, (err, user) => { // objeto json mas la funcion
 
             if (err) {
-                console.log(`error: ${err}`);
-                res.status(400).json({
-                    error: err
-                });
+                app.utils.error.send(err, req, res);
             } else {
                 res.status(200).json(user);
             }
